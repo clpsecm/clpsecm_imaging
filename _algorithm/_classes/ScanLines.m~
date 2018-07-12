@@ -1,7 +1,0 @@
-classdef ScanLines
-    properties(Access = public)
-        nlines;
-        current;
-        angles;   
-    end
-end
