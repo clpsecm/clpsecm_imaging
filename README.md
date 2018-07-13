@@ -71,8 +71,8 @@ handle > SmcProblem > CalibLasso
        > Solver     > Ipalm
 ```
 
-#### 3. clpconfig.m
-The m-file `clpconfig.m` records the setting of CLP. 
+#### 3. Configuration of CLP
+The m-file `clpconfig.m` records the setting of CLP. It records 
 
 ## 4. Use of code
 ### 1. Basic usage
