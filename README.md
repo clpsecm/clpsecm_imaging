@@ -26,7 +26,7 @@ Put the data in excel file format in the folder with the naming convention:
 ```
 clpsecm_(MMDDYY)_S(sample_number)_L(number_of_lines)_(data_number).xlsx
 ```
-For example, a CLP-SECM file is generated in date July 04, 2076, with scans the ten dots sample with sample number 3-2. The scan choose 10 lines with different angles, and is the second experiment in that same day under same setting, should has the file name defined as
+For example, a CLP-SECM file is generated in date July 04, 2076, which scans the ten dots sample of sample number 3-2. The scan consists of 10 lines with different angles, and is the second experiment in that same day under same setting, should has the file name defined as
 ```
 clpsecm_070476_S032_L10_02.xlsx
 ```
@@ -71,4 +71,4 @@ handle > SmcProblem > CalibLasso
 
 ## 4. Use of code
 ### 1. Basic usage
-
+We provides three basic examples to 
