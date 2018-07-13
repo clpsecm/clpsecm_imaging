@@ -41,10 +41,10 @@ In the file, each of the line scans is stored in separated sheets started from s
       5. `Sparsemap`   - The Binary SECM image that has a few sparsely populated non-zero entries, used to represent **X<sub>0</sub>**.
       6. `DictProfile` - The SECM image of a single dictionary profile with center locating at (0,0), used to represent **D**.
       7. `ProbeParam`  - Record single CLP parameter, there are four types of parameter controls behavior of CLP:
-            1. Scan angle.
-            2. Line shifts.
-            3. Pointwise measurement intensity.
-            4. Point-spread-function of line scan.
+            * Scan angle.
+            * Line shifts.
+            * Pointwise measurement intensity.
+            * Point-spread-function of line scan.
       8. `ProbeParams` - Record all four CLP parameters.   
       
     The SECM image objects has inheritance hierarchy as:
