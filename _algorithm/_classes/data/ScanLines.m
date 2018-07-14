@@ -7,13 +7,16 @@ classdef ScanLines < SecmCoords
 %       currents: matrix(nmeasures,nlines); CLP current measures.
 %       params:   object CalibParams; CLP probe properties.
 %
+% obj = SCANLINES(ticks,currents) Create scan line object using parametric
+% setting in clpconfig.m
+%
 % obj = SCANLINES(obj1) Copy construtor.
 %
 % SCANLINES is a handle object.
 %
 % SCANLINES methods:
-%   PLUS   -  Overload '+'. return new SCANLINES w/summed currents.
-%   MINUS  -  Overload '-', return new SCANLINES w/subtracted currents.
+%   PLUS   -  Overload '+'. return new SCANLINES w/ summed currents.
+%   MINUS  -  Overload '-', return new SCANLINES w/ subtracted currents.
 %   NORM   -  Return Frobenius norm of currents.
 %   INPROD -  Return inner product of currents.
 %   CONV   -  Convolve currents w/ input kernel.
@@ -28,7 +31,7 @@ classdef ScanLines < SecmCoords
 %   CURRENTS -  vector(nmeasure,nlines); current data. 
 %   PARAMS   -  object ProbeParams; CLP probe properties.
 %
-% See also SECMIMAGE, SECMCOORDS, PROBEPARAMS
+% See also SECMIMAGE, SECMCOORDS, PROBEPARAMS, CLPCONFIG
 
 properties 
     nlines    % scalar; number of lines.
@@ -45,10 +48,15 @@ methods
             nlines = obj1.nlines;
             params = obj1.params;
             currents = obj1.currents;
+        elseif nargin == 2 % Input type (ticks,currents)
+            ticks = varargin{1};
+            currents = varargin{2};
+            nlines = size(currents,2);
+            params = ProbeParams('config',ticks);     
         elseif nargin == 3 % Input type (ticks,currents,params)
             ticks = varargin{1}; 
-            nlines = length(varargin{3}.angles.value);
             currents = varargin{2};
+            nlines = size(currents,2);
             params = varargin{3}; 
         end
         obj = obj@SecmCoords(ticks);
