@@ -1,7 +1,3 @@
-Imaging algorithm from CLP-SECM data
----
-This code package is dedicated to image reconstruction from scanning chemical microscopic image (SECM) data using continuous line probe (CLP).
-=======
 # Imaging algorithm of CLP-SECM data
 ---
 ## 1. Overview
