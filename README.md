@@ -72,9 +72,11 @@ handle > SmcProblem > CalibLasso
 ```
 
 #### 3. Configuration of CLP
-The m-file `clpconfig.m` records the setting of CLP. It records 
+The m-file `clpconfig.m` records the parametric setting of CLP, which setup the scanning angles, shifts, intentisy and point-spread-function for line probe. Whenever a `ScanLines` object is created without specifically speccified parameter, this file is being read and produces the parametric setting accordingly.
 
 ## 4. Use of code
 ### 1. Basic usage
 We provides three basic examples for beginner to get familiar with the package:
-* `Example1` -  Read the data with given file name, and generate the `ScanLine` object and its back-projected `SecmImage` object.
+* `Example1` - Read the data with given file name, and generate the `ScanLines` object and its back-projected `SecmImage` object.
+* `Example2` - Generate a synthetic SECM sample as `SecmImage`object, and produces a simluated line scans as `ScanLines` object with known parametric setting with object `ProbeParams`. Define a problem using object `CalibLasso`, and solve it with `Ipalm` algorithmic methods. The location of **X<sub>0</sub>** is recovered after sufficient number of iterations.
+* `Example3` - Similar to `Example2`, but this time we setup problem `CalibLasso` with wrong guess of parameters. We show the algorithm still successfully find out the correct locations.
