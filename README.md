@@ -52,8 +52,8 @@ The SECM image objects has inheritance hierarchy as:
 ```
 handle > DataSpec
        > SecmCoords > ScanLines 
-                     > SecmImage > SparseMap
-                                 > DictProfile
+                    > SecmImage > SparseMap
+                                > DictProfile
        > ProbeParam
        > ProbeParams
 ```   
