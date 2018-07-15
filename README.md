@@ -30,7 +30,7 @@ For example, a CLP-SECM file is generated in date July 04, 2076, which scans the
 ```
 clpsecm_070476_S032_L10_02.xlsx
 ```
-In the file, each of the line scans is stored in separated sheets started from sheet 2, where column B,C records the scanning distance and reactive currents, respectively.
+In the file, each of the line scans is stored in separated sheets starting from sheet 2, where column B,C records the scanning distance and reactive currents, respectively.
 
 ## 3. Overview of Code Package
 #### 1. The SECM image objects
