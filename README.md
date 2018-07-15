@@ -71,13 +71,13 @@ handle > SmcProblem > CalibLasso
        > Solver     > Ipalm
 ```
 
-#### 3. Configuration of CLP
+#### 3. Configuration of the continuous line probe
 The m-file `clpconfig.m` records the parametric setting of CLP, which setup the scanning angles, shifts, intentisy and point-spread-function for line probe. Whenever a `ScanLines` object is created without specifically speccified parameter, this file is being read and produces the parametric setting accordingly.
 
 ## 4. Use of code
 #### 1. Basic usage
 We provides three basic examples for beginner to get familiar with the package:
-* `Example1` - Read the data with given file name, generates the `ScanLines` object and its back projected `SecmImage` object.
+* `Example1` - Read the data with given file name, generates `ScanLines` object and its back projected `SecmImage` object.
 * `Example2` - Generate a synthetic SECM sample `SecmImage` object and produces a simluated line scans `ScanLines` object with known  parametric setting with object `ProbeParams`. Define a problem using object `CalibLasso`, and solve it with `Ipalm` algorithmic methods. The location of **X<sub>0</sub>** is recovered after sufficient number of iterations.
 * `Example3` - Similar to `Example2`, but this time we setup problem `CalibLasso` with wrong guess of parameters. We show the algorithm still successfully find out the correct locations.
 
@@ -92,7 +92,7 @@ Users are free to modify the configuration, whenever the `ScanLines` object is c
 #### 3. Create your own experiments
 In `Example2` and `Example3`, we call the object `IpalmSecmSimu` as problem solvern, which is a children of `Ipalm` solver that is specially taylored to demonstrate result for simulated problems. For other experimental setup, users are encouraged to create other solver objects and deom the procedure of solver according to their own needs.
 
-#### 4. Augment new properties for CLP 
+#### 4. Augment new properties for the CLP
 Currently, the full line scan of CLP follows these operation sequentially. Whenever the following code is executed
 ```
 lines = SecmImage.line_project(param);
@@ -108,5 +108,6 @@ image = ScanLines.back_project();
 ```
 then above scanning procedure operates in reverse order. User can change the function both function `SecmImage.line_project()` and `ScanLines.back_project` to modify or even augment new CLP properties.
 
-<p align="right"><small> Last Update: 2018-07-14 by Henry Kuo </small></p>
+---
+<p align="right"> Last Update: 2018-07-14 by Henry Kuo </p>
 
