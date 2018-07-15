@@ -75,8 +75,38 @@ handle > SmcProblem > CalibLasso
 The m-file `clpconfig.m` records the parametric setting of CLP, which setup the scanning angles, shifts, intentisy and point-spread-function for line probe. Whenever a `ScanLines` object is created without specifically speccified parameter, this file is being read and produces the parametric setting accordingly.
 
 ## 4. Use of code
-### 1. Basic usage
+#### 1. Basic usage
 We provides three basic examples for beginner to get familiar with the package:
-* `Example1` - Read the data with given file name, and generate the `ScanLines` object and its back-projected `SecmImage` object.
-* `Example2` - Generate a synthetic SECM sample as `SecmImage`object, and produces a simluated line scans as `ScanLines` object with known parametric setting with object `ProbeParams`. Define a problem using object `CalibLasso`, and solve it with `Ipalm` algorithmic methods. The location of **X<sub>0</sub>** is recovered after sufficient number of iterations.
+* `Example1` - Read the data with given file name, generates the `ScanLines` object and its back projected `SecmImage` object.
+* `Example2` - Generate a synthetic SECM sample `SecmImage` object and produces a simluated line scans `ScanLines` object with known  parametric setting with object `ProbeParams`. Define a problem using object `CalibLasso`, and solve it with `Ipalm` algorithmic methods. The location of **X<sub>0</sub>** is recovered after sufficient number of iterations.
 * `Example3` - Similar to `Example2`, but this time we setup problem `CalibLasso` with wrong guess of parameters. We show the algorithm still successfully find out the correct locations.
+
+#### 2. Modify the configuration of line probe
+In the file `clpconfig.m`, there are four type of parameters corresponding to the properties of line probe:
+1. `angles`: Rotate the stage with specified angle and perform line projection.
+2. `shifts`: Shift the currents for each lines by designed distance.
+3. `intensity`: Assign the intensity for currents for every lines and every single measurements.
+4. `psf`: the point spread function of currents, each lines convolute with the input kernel.
+Users are free to modify the configuration, whenever the `ScanLines` object is created, if not specified, this file will be loaded and the CLP will equipped with these parametric setting when operation line projection and back projection.
+
+#### 3. Create your own experiments
+In `Example2` and `Example3`, we call the object `IpalmSecmSimu` as problem solvern, which is a children of `Ipalm` solver that is specially taylored to demonstrate result for simulated problems. For other experimental setup, users are encouraged to create other solver objects and deom the procedure of solver according to their own needs.
+
+#### 4. Augment new properties for CLP 
+Currently, the full line scan of CLP follows these operation sequentially. Whenever the following code is executed
+```
+lines = SecmImage.line_project(param);
+```
+then it generates the complete line scans under following procedure:
+1. Rotate and projection: Rotate the stage with specified `angles` values and perform line projections.
+2. Shift all lines: Shift lines projected in different angles by values of `shifts`.
+3. Pointwise intensity: Each measurements is reweighed by 2D-function of `intensity`.
+4. 1D-Convolution with point-spread-function: Each lines is convololved with 1D-function of `psf`.
+Similarly, the back projection from the lines to image, executes
+```
+image = ScanLines.back_project();
+```
+then above scanning procedure operates in reverse order. User can change the function both function `SecmImage.line_project()` and `ScanLines.back_project` to modify or even augment new CLP properties.
+
+<p align="center"> Last Update: 2018-07-14 by Henry K. </p>
+
