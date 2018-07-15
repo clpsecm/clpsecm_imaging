@@ -108,5 +108,5 @@ image = ScanLines.back_project();
 ```
 then above scanning procedure operates in reverse order. User can change the function both function `SecmImage.line_project()` and `ScanLines.back_project` to modify or even augment new CLP properties.
 
-<p align="center"> Last Update: 2018-07-14 by Henry K. </p>
+<p align="right"><small> Last Update: 2018-07-14 by Henry Kuo </small></p>
 
