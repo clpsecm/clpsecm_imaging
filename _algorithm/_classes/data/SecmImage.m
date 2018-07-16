@@ -145,7 +145,7 @@ methods
         end
         lines = ScanLines(obj.ticks, currents, params);
 
-        % Shift each lines with assigne shifts
+        % Shift each lines with assigned shifts
         if params.shifts.isactive
             s = params.shifts.func(params.shifts.value);
             lines.shift(s);

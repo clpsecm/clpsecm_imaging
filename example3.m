@@ -4,9 +4,9 @@ close all;
 initpkg
 
 %% ===== Parameter Setting ====== %%
-ticks = [-10:0.20:10];  % Distance tags of each line measurment
-ndiscs = 6;             % Number of discs
-d_rad = 0.4;            % Disc radius (mm)
+ticks = [-1:0.01:1];  % Distance tags of each line measurment
+ndiscs = 6;           % Number of discs
+d_rad = 0.05;          % Disc radius (mm)
 
 
 %% ===== Generate discs and ground truth image ====== %%

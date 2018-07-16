@@ -43,14 +43,16 @@ methods
     function lines = get_clpsecm_data(varargin)
     % lines = obj.GET_CLPSECM_DATA() Return SecmLines object from data.
         obj = varargin{1};
-        SHEET_ONE = 2;
+        SHEET_OFFSET = 2;
         DATA_OFFSET = 1;
-        TICKS_COL = 'B';
+        TIME_COL = 'B';
         CURRENT_COL = 'C';
-
+        TIME_PERIOD = 0.1; % Current recoding period in (sec)
+        SAMPLE_PERIOD = 1; % Sample time period in (sec)
+        
         %---data file path---%
         folderpwd = '../clpsecm_data/';
-        filename = ['clpsecm_',obj.date,...
+        filename = ['clpsecm_', obj.date,...
                     '_S', num2str(obj.sample_number,'%03d'),...
                     '_L', num2str(obj.nlines,'%02d'),...
                     '_',  num2str(obj.version,'%02d'),...
@@ -58,24 +60,32 @@ methods
         fpath = [folderpwd,filename];
 
         %---Find the scanning distance---%
-        m = (obj.scanlength)     / (obj.resolution);
-        s = (obj.start_location) / (obj.resolution);
-        off = DATA_OFFSET;
-        B   = TICKS_COL;
-        C   = CURRENT_COL;
+        s_t  = SAMPLE_PERIOD / TIME_PERIOD; 
+        m = s_t * (obj.scanlength)     / (obj.resolution);
+        s = s_t * (obj.start_location) / (obj.resolution);
+        doff = DATA_OFFSET;
+        B    = TIME_COL;
+        C    = CURRENT_COL;
 
-        ticks = xlsread( fpath, SHEET_ONE , ...
-                    [B,num2str(s+off),':',B,num2str(s+m+off)] ); 
-        ticks = ticks - (ticks(1)+ticks(end))/2;
 
-        %---Generate line data---%
-        currents = zeros(length(ticks), obj.nlines);          
+        % Generate ticks and line data
+        sampletime = xlsread( fpath, SHEET_OFFSET, ...
+                [B,num2str(s+doff),':',B,num2str(s+m+doff)] ); 
+        currents = zeros(numel(sampletime), obj.nlines);          
         for L = 1:obj.nlines
             currents(:,L) = ... 
-                xlsread( fpath, SHEET_ONE+(L-1) , ...
-                    [C,num2str(s+off),':',C,num2str(s+m+off)] );  
+                xlsread( fpath, SHEET_OFFSET+(L-1) , ...
+                    [C,num2str(s+doff),':',C,num2str(s+m+doff)] );  
         end
         
+        % Find sampled current and ticks, center and calculate the ticks
+        sampletime = sampletime(1:s_t:end);
+        currents = currents(1:s_t:end,:); 
+        ticks = sampletime * obj.resolution;
+        ticks = ticks - (ticks(1)+ticks(end))/2; 
+        
+        
+        %---Generate ScanLines data---%
         if nargin == 2
             obj.params = varargin{2};
         else % read clpconfig
