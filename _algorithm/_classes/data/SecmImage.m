@@ -169,12 +169,16 @@ methods
 
     function draw_image(obj)
     % obj.DRAW_IMAGE(); Draws image with coordinate system.
+        h = gca;
         x = obj.ticks;
         y = obj.ticks;
         imagesc(x,y,obj.image);
-        set(gca,'YDir','normal');
-        xlabel('Distance/mm')
-        ylabel('Distance/mm')
+        set(h,'YDir','normal');
+        xlabel('Distance/mm'); xtickformat('%.1f');
+        ylabel('Distance/mm'); ytickformat('%.1f');
+        c = colorbar(); c.Label.String = 'Currents/A';
+                        c.FontSize = h.FontSize - 4;
+                        c.Label.FontSize = h.FontSize;
     end
 end
 

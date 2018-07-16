@@ -192,8 +192,8 @@ methods
             end
         end
         legend(legend_info,'location','northwest'); 
-        xlabel('Distance/mm'); xtickformat('%d');
-        ylabel('Current/A'); ytickformat('%1.2f');
+        xlabel('Distance/mm'); xtickformat('%.1f');
+        ylabel('Current/A');   ytickformat('%1.2f');
     end
 end
     
