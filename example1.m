@@ -9,13 +9,13 @@ initpkg
 d = DataSpec('053018',0,4,1);    % (date, sample_number, nlines, version)
 d.set_scan_distance(10,70,0.01); % (start_location, length, resolution)(mm)
 
-d = DataSpec('071118',0,4,1);   % (date, sample_number, nlines, version)
-d.set_scan_distance(10,60,0.01) 
+% d = DataSpec('071118',0,4,1);   % (date, sample_number, nlines, version)
+% d.set_scan_distance(10,60,0.01) 
 
 %% ===== Probe parameter object ====== %%
 % Set CLP parameters.
 params        = ProbeParams(NaN);          % Initialize inactive parameter 
-params.angles = ProbeParam([0,60,120,180]); % Set constant CLP angles.
+params.angles = ProbeParam([0,40,80,120]); % Set constant CLP angles.
 
 % Checkout all methods for class "ProbeParams"
 whos params;      pause();

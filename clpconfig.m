@@ -38,7 +38,7 @@ clpcfg.angles.value = [0:40:160]';
 clpcfg.angles.bound = @(v) [v-1,v+1];
 clpcfg.angles.func  = @(v) v;
 
-% ----- Shists ----- %
+% ----- Shifts ----- %
 clpcfg.shifts.value = NaN;
 clpcfg.shifts.bound = @(v) v;
 clpcfg.shifts.func  = @(v) v;
