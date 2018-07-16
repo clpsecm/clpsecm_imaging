@@ -49,9 +49,9 @@ clpcfg.intensity.bound = @(v) v;
 clpcfg.intensity.func  = @(v) ones(nmeasures,1)*v'; 
 
 % ------- Psf ------- %
-clpcfg.psf.value = 0.2;
-clpcfg.psf.bound = [0.1,0.3];
-clpcfg.psf.func  = @(v) normpdf(ticks,0,max(v,0.1)) /...
-                        norm(normpdf(ticks,0,max(v,0.1)),1);
+clpcfg.psf.value = 0.02;
+clpcfg.psf.bound = [0.01,0.03];
+clpcfg.psf.func  = @(v) normpdf(ticks,0,max(v,0.01)) /...
+                        norm(normpdf(ticks,0,max(v,0.01)),1);
 
 
