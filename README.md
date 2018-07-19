@@ -86,8 +86,8 @@ In the file `clpconfig.m`, there are four type of parameters corresponding to th
 1. `angles`: Rotate the stage with specified angle and perform line projection.
 2. `shifts`: Shift the currents for each lines by designed distance.
 3. `intensity`: Assign the intensity for currents for every lines and every single measurements.
-4. `psf`: The point spread function of currents, each lines 
-ve with the input psf kernel.
+4. `psf`: The point spread function of currents, each lines convolve with the input psf kernel.
+
 Users are free to modify the configuration, whenever the `ScanLines` object is created, if not specified, this file will be loaded and the CLP will equipped with these parametric setting when operation line projection and back projection.
 
 #### 3. Create your own experiments
