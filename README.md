@@ -91,7 +91,7 @@ In the file `clpconfig.m`, there are four type of parameters corresponding to th
 Users are free to modify the configuration, whenever the `ScanLines` object is created, if not specified, this file will be loaded and the CLP will equipped with these parametric setting when operation line projection and back projection.
 
 #### 3. Create your own experiments
-In `Example2` and `Example3`, we call the object `IpalmSecmSimu` as problem solvern, which is a children of `Ipalm` solver that is specially taylored to demonstrate result for simulated problems. For other experimental setup, users are encouraged to create other solver objects and deom the procedure of solver according to their own needs.
+In `Example2` and `Example3`, we call the object `IpalmSecmSimu` as problem solver, which is a children of `Ipalm` solver that is specially taylored to demonstrate result for simulated problems. For other experimental setup, users are encouraged to create other solver objects and deom the procedure of solver according to their own needs.
 
 #### 4. Augment new properties for the CLP
 Currently, the full line scan of CLP follows these operation sequentially. Whenever the following code is executed
