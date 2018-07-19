@@ -62,7 +62,7 @@ handle > DataSpec
 In the path `../_algorithm/_classes/alg`, contains the following class objects:
 1. `SmcProblem` -  An abstract of problem which minimize objective contains smooth coupling term across variables.
 2. `CalibLasso` -  A minimization problem with lasso-type objective that calibrate linear measurements.
-3. `Solver`     -  A generica iterative based algorithmic environment.
+3. `Solver`     -  A generic iterative based algorithmic environment.
 4. `Ipalm`      -  The IPALM solver, with which we solve problem of class `SmcProblem`.
       
 The algorithm objects has inheritance hierarchy as:
