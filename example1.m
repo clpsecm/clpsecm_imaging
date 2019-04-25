@@ -15,21 +15,19 @@ angles = [0,45,70,90,115,135,180];
 
 %% ===== Probe parameter object ====== %%
 % Set CLP parameters.
-params        = ProbeParams(NaN);       % Initialize inactive parameter 
-params.angles = ProbeParam(angles); % Set constant CLP angles.
+p        = ProbeParams(NaN);   % Initialize inactive parameter 
+p.angles = ProbeParam(angles); % Set constant CLP angles.
 
 %% ===== Scan line object ====== %%
 % [Note] When input w/o parmas, read clpconfig for CLP parameter setting.
-lines = d.get_clpsecm_data(params);
+lines = d.get_clpsecm_data(p);
 lines.downsample(4);
+lines.params.angles = ProbeParam(angles); 
+lines.params.psf = ProbeParam(NaN);
 
 
 %% ===== SECM image object ===== %%
 % Back project image from lines
-lines.currents = lines.currents(:,[1,2]);
-lines.nlines = 2;
-lines.params.angles = ProbeParam(angles([1,2]));
-lines.params.psf = ProbeParam(NaN);
 bpimage = lines.back_project();
 
 
