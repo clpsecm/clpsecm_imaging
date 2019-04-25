@@ -15,17 +15,19 @@ classdef ScanLines < SecmCoords
 % SCANLINES is a handle object.
 %
 % SCANLINES methods:
-%   PLUS   -  Overload '+'. return new SCANLINES w/ summed currents.
-%   MINUS  -  Overload '-', return new SCANLINES w/ subtracted currents.
-%   NORM   -  Return Frobenius norm of currents.
-%   INPROD -  Return inner product of currents.
-%   CONV   -  Convolve currents w/ input kernel.
-%   MULT   -  Pointwise multiply currents w/ input multiplier(s).
-%   SHIFT  -  Shift currents data by input distance in (mm).
+%   PLUS    -  Overload '+'. return new SCANLINES w/ summed currents.
+%   MINUS   -  Overload '-', return new SCANLINES w/ subtracted currents.
+%   NORM    -  Return Frobenius norm of currents.
+%   INPROD  -  Return inner product of currents.
+%   CONV    -  Convolve currents w/ input kernel.
+%   MULT    -  Pointwise multiply currents w/ input multiplier(s).
+%   SHIFT   -  Shift currents data by input distance in (mm).
+%   ZEROING -  Adjust the base value of current to zero.
 %   BACK_PROJECT - Backproject of currents to SECM image base on params
 %   DOWNSAMPLE   - Decrease resolution of current data by integer rate.
 %   PLOT_LINES   - Plot current data (with selected angles in deg).
-%  
+%   PLOT_PSF     - Plot psf data.   
+%
 % SCANLINES public fields:
 %   NLINES   -  scalar; number of lines.
 %   CURRENTS -  vector(nmeasure,nlines); current data. 
@@ -87,15 +89,32 @@ methods
     end
         
     function conv(obj,psf)
-    % obj.CONV(psf) Convolute currents w/kernels. 
+    % obj.CONV(psf) Convolute currents psf. 
+    % Center(left with odd residual) the shorter signal if length uneven 
+        if isrow(psf); psf = psf'; end
         if isscalar(psf)
             obj.currents = obj.currents * psf;
-        else % kernel is vector of length nmeasures
+        else % kernel is vector of length >= 2
+            curs = obj.currents;
+            % Calculate the length of two signals, zeropad shoter one
+            [ns,np] = deal( obj.nmeasures,    length(psf)     ); 
+            [nM,nm] = deal( max(ns,np),       min(ns,np)      );
+            [nl,nr] = deal( floor((nM-nm)/2), ceil((nM-nm)/2) );
+            if ns > np; psf  = [zeros(nl,1); psf; zeros(nr,1)];
+            else;       curs = [zeros(nl,obj.nlines); curs; zeros(nr,obj.nlines)];
+            end
+            
+            % Define Fourier opeartor
             F  = @(line)  SecmCoords.fft(line);
             iF = @(fline) SecmCoords.ifft(fline);
+            
+            % Convolve lines
             fk = F(psf);
             for I = 1:obj.nlines
-                obj.currents(:,I) = real(iF(F(obj.currents(:,I)).*fk));
+                curs(:,I) = real(iF(F(curs(:,I)).*fk));
+            end
+            if ns > np;  obj.currents = curs;
+            else;        obj.currents = curs([nl+1:nl+nm],:);
             end
         end
     end
@@ -119,6 +138,12 @@ methods
                     (d(I)-dl) * shift(obj.currents(:,I),dh) ;
             end
         end
+    end
+    
+    function zeroing(obj)
+    % obj.ZEROING() Adding offset so the base value of each current is 0.
+        mc = min(obj.currents);
+        obj.currents = obj.currents - ones(size(obj.currents,1),1)*mc;
     end
 
     function secmImage = back_project(obj)
@@ -155,7 +180,7 @@ methods
         img = zeros(N,N);
         for I = 1:obj1.nlines
             img = img + SecmImage.rotate_image(...
-                repmat(flip(obj1.currents(:,I)),[1,N]), angles(I));
+                repmat(flip(obj1.currents(:,I)),[1,N]), -angles(I));
         end
         secmImage = SecmImage(obj1.ticks,img);
         secmImage.image = (secmImage.image).*(secmImage.Ceff);
@@ -194,6 +219,27 @@ methods
         legend(legend_info,'location','northwest'); 
         xlabel('Distance/mm'); xtickformat('%.1f');
         ylabel('Current/A');   ytickformat('%1.2f');
+    end
+    
+    function plot_psf(obj)
+    % obj.PLOT_PSF() Plot all current data
+        psfline = obj.params.psf.func(obj.params.psf.value);
+        psfticks = obj.get_psfticks(obj.ticks);
+        box on;
+        plot(psfticks,psfline);
+        xlabel('Distance/mm'); xtickformat('%.1f');
+        ylabel('Current/A');   ytickformat('%1.2f');
+    end   
+end
+
+methods (Static)
+    function psfticks = get_psfticks(ticks)
+    % psfticks = GET_PSFTICKS(ticks) Get ticks for psf function.
+        if isrow(ticks); ticks = ticks'; end
+        res = ticks(2)-ticks(1);
+        psfticks = [ ticks(2:end)  + min(ticks) - max(ticks) - res; ...
+                     ticks; ...
+                     ticks(1:end-1)+ max(ticks) - min(ticks) + res ];
     end
 end
     

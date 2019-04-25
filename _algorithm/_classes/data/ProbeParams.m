@@ -1,9 +1,9 @@
 classdef ProbeParams < handle
 % PROBEPARAMS Constrct the parameters object for line probe.
 % 
-% obj = PROBEPARAMS(NaN) Construct inactive PROBEPARAMS
+% obj = PROBEPARAMS(NaN) Construct inactive PROBEPARAMS.
 %
-% obj = PROBEPARAMS(0) Construct zero PROBEPARAMS
+% obj = PROBEPARAMS(0) Construct zero PROBEPARAMS, only 'angles' is [0].
 %
 % obj = PROBEPARAMS(obj1) Copy PROBEPARAMS.
 %
@@ -46,14 +46,15 @@ methods
             v = varargin{1};
             iscopy = isa(v,'ProbeParams');
             if     iscopy;   for p=plist; obj.(p{1})=ProbeParam(v.(p{1})); end
-            elseif v == 0;   for p=plist; obj.(p{1})=ProbeParam(0);   end
+            elseif v == 0;   for p=plist; obj.(p{1})=ProbeParam(NaN);   end
             elseif isnan(v); for p=plist; obj.(p{1})=ProbeParam(NaN); end  
             else 
                 error('Input should be either 0, NaN or ProbeParams.');
             end
+            if v == 0; obj.angles = ProbeParam(0); end
             return;
         elseif strcmp(varargin{1},'config')
-            ticks  = varargin{2};
+            ticks = varargin{2};
             % ----- Initial value ----- %
             for p = plist; obj.(p{1}) = ProbeParam(NaN); end
             % ----- Assign Parameters ----- %
@@ -181,7 +182,7 @@ methods
     function set_bound(obj,param,bound); obj.(param).set_bound(bound); end
     % SET_BOUND(obj,param,bound) Set bound for param
     
-    function set_func(obj,param,func); obj.(param).set_bound(func); end 
+    function set_func(obj,param,func); obj.(param).set_func(func); end 
     % SET_FUNC(obj,param,func) Set func for param    
     
     function p = get_isvariable(obj)

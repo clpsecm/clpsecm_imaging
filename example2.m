@@ -12,7 +12,7 @@ angles = [0:20:160]';  % Scan angles
 
 %% ===== Generate discs and ground truth image ====== %%
 % Parameter of data, enable angles parameter only.
-p        = ProbeParams(NaN);   % Initialize inactive parameters.
+p        = ProbeParams(0);     % Initialize 0 parameters.
 p.angles = ProbeParam(angles); % Set constant parameter angles.
 
 % Generate disc D
@@ -20,7 +20,7 @@ func = @(x,y) x.^2 + y.^2 < disc_radius^2;
 D = DictProfile(ticks, func);
 
 % Generate random map X0
-X0 = SparseMap(ticks, 'random', disc_radius, ndiscs);
+X0 = SparseMap(ticks, 'random-location', disc_radius, ndiscs);
 
 % Generate simulated image Y
 Y = X0 * D;
@@ -41,7 +41,8 @@ subplot(224); LtR.draw_image();        title('Back projection image');
 
 %% ===== Reconstrct the image with IPalm algorithm package ====== %%
 % Generate problem with formulation 'Calibrated Lasso'
-prb = CalibLasso(R,D,p);
+lda = 0.5*max(pos(D*D));
+prb = CalibLasso(R,D,p,lda);
 
 % Generate algorithm 'IPalm' and solve the simulated problem.
 alg = IPalmSecmSimul(prb,X0,D);

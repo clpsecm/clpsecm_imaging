@@ -61,6 +61,22 @@ methods
         check_issame(obj1,obj2);
         obj = SecmImage(obj1.ticks, obj1.image - obj2.image);
     end
+    
+    function obj = times(obj1,obj2)
+    % obj = obj1 .* obj2 Return a new SECMIMAGE with entrywise mult. image.
+        if isa(obj1,'SecmImage')
+            obj = SecmImage(obj1.ticks);
+            if isa(obj2,'SecmImage')
+                check_issame(obj1,obj2);
+                obj.image = obj1.image .* obj2.image;
+            else % obj2 is matrix
+                obj.image = obj1.image .* obj2;
+            end
+        else % obj1 is matrix
+            obj = SecmImage(obj2.ticks);
+            obj.image = obj2.image .* obj1;
+        end   
+    end
 
     function obj = mtimes(obj1,obj2)
     % obj = obj1 * obj2 Return a new SECMIMAGE with convolution of images.
@@ -79,6 +95,8 @@ methods
             obj.image = obj2.image * obj1;
         end        
     end
+    
+    
 
     function obj = soft(obj,lda); obj.image = soft(obj.image,lda); end
     % obj = obj.SOFT(lda) Return soft-thresholded image w/ threshold lda.
@@ -141,7 +159,7 @@ methods
 
         % Line projection with assigned slope angles
         for I = 1:nlines
-            currents(:,I) = flip(sum(obj.rotate_image(obj.image,-angles(I)),2));                     
+            currents(:,I) = flip(sum(obj.rotate_image(obj.image,angles(I)),2));                     
         end
         lines = ScanLines(obj.ticks, currents, params);
 
@@ -184,15 +202,15 @@ end
 
 methods (Static)
     function img = rotate_image(img,angle)
-    % img = obj.ROTATE_IMAGE(img,angle) Rotate image counterclockwise.
-        img = fft_rotate(img,angle);
+    % img = obj.ROTATE_IMAGE(img,angle) Rotate image clockwise.
+        img = fft_rotate(img,-angle);
     end
 end
 
 methods (Access = private)
     function check_issame(obj1,obj2)
         if ~isequal(obj1.ticks,obj2.ticks)
-            error('SecmImage convolution available only in same coordinates')
+            error('SecmImage operation available only in same coordinates')
         end
     end
 end

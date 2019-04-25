@@ -56,7 +56,7 @@ methods
         obj.status = 'Unsolved';
         obj.objvals_ = [obj.objval; nan(obj.maxiter-1,1)];
         obj.set_maxiter(5000);
-        obj.set_display(20);
+        obj.set_display(5);
     end
 
     function solve(obj)
@@ -65,6 +65,7 @@ methods
         while true
             obj.iiter = obj.iiter + 1;
             obj.iter();
+            obj.set_objval();
             obj.objvals_(obj.iiter) = obj.objval;
             if obj.stop(); break; end
             obj.display_iters();
@@ -72,7 +73,7 @@ methods
         obj.set_objval();
         obj.display_result();
     end
-
+        
     function set_maxiter(obj,maxiter); obj.maxiter = maxiter; end
     % obj.SET_MAXITER(maxiter) Set maximum iteration number.
 

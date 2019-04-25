@@ -1,21 +1,19 @@
-classdef IPalmSecmSimul < IPalm
+classdef ReweightIPalmSecmRealdata < ReweightIPalm
     properties
-        D  % true kernel
-        X0 % true map
-        Y  % true image
+        D      % true kernel
+        lines  % lines
     end
     
     methods
-        function obj = IPalmSecmSimul(problem,true_map,disc)
-            obj = obj@IPalm(problem);
-            obj.X0 = true_map;
+        function obj = ReweightIPalmSecmRealdata(problem,disc,lines)
+            obj = obj@ReweightIPalm(problem);
             obj.D = disc;
-            obj.Y = (obj.X0)*(obj.D);
+            obj.lines = lines;
         end
 
         function display_result(obj)
             subplot(221);
-            display_result@IPalm(obj);
+            display_result@ReweightIPalm(obj);
             title('Objectivel value');
             
             subplot(222);
@@ -24,8 +22,9 @@ classdef IPalmSecmSimul < IPalm
             title('Current image Y');
             
             subplot(223); 
-            obj.Y.draw_image();
-            title('True image Y');
+            obj.lines.plot_psf();
+            title('Point spread function');
+            legend off;
             
             subplot(224);
             obj.vars{1}.draw_image; 

@@ -1,12 +1,13 @@
 % EXAMPLE3 Demostrates how to generate a simulated SECM data, and perform
-% image reconstruction when parameters are unkonwn.
+% image reconstruction with reweighted ipalm using the CLP data from file
+% clpconfig.  
 close all;
 initpkg
 
 %% ===== Parameter Setting ====== %%
-ticks = [-1:0.01:1];  % Distance tags of each line measurment
-ndiscs = 6;           % Number of discs
-d_rad = 0.05;          % Disc radius (mm)
+ticks  = [-3:0.05:3]; % Distance tags of each line measurment
+ndiscs = 4;           % Number of discs
+d_rad  = 0.1;         % Disc radius (mm)
 
 
 %% ===== Generate discs and ground truth image ====== %%
@@ -15,22 +16,21 @@ func = @(x,y) x.^2 + y.^2 < d_rad^2;
 D = DictProfile(ticks, func);
 
 % Generate random map X0
-X0 = SparseMap(ticks, 'random', d_rad, ndiscs);
+X0 = SparseMap(ticks, 'random-location', d_rad, ndiscs);
 
 % Generate simulated image Y
-Y = X0 * D;
+Y = X0 * D; 
 
 % Generate lines R from image Y using clpconfig parameter
 R = Y.line_project();
 
-%% ===== Reconstrct the image with IPalm algorithm package ====== %%
-% Assign a WRONG parameter
-p_wrong = ProbeParams('config',ticks);
-p_wrong = p_wrong + {'angles',1};
+%% ===== Reconstrct the image with ReweightIPalm algorithm package ====== %%
+% Generate problem with formulation 'Calibrated Lasso'
+lda = 0.2*max(pos(D*back_project(R)));
+prb = CalibLasso(R,D,R.params,lda);
 
-% Solve the Calibration problem, start from wrong parameters
-prb = CalibLasso(R,D,p_wrong);
-alg = IPalmSecmSimul(prb,X0,D);
+% Generate algorithm 'ReweightIPalm' and solve the simulated problem.
+alg = ReweightIPalmSecmSimul(prb,X0,D);
 figure; 
 alg.solve();
 

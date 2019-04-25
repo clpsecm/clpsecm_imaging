@@ -34,24 +34,36 @@ nmeasures = numel(ticks);
 
 %% ====== [Userdef] Probe Parameters ====== %%
 % ----- Angles ----- %
-clpcfg.angles.value = [0:40:160]';
-clpcfg.angles.bound = @(v) [v-1,v+1];
+clpcfg.angles.value = [0,45,70,90,115,135,180]';
+clpcfg.angles.bound = @(v) v;
 clpcfg.angles.func  = @(v) v;
-
+  
 % ----- Shifts ----- %
 clpcfg.shifts.value = NaN;
 clpcfg.shifts.bound = @(v) v;
 clpcfg.shifts.func  = @(v) v;
-
+ 
 % ---- Intensity ---- %
 clpcfg.intensity.value = NaN;
 clpcfg.intensity.bound = @(v) v; 
 clpcfg.intensity.func  = @(v) ones(nmeasures,1)*v'; 
 
 % ------- Psf ------- %
-clpcfg.psf.value = 0.02;
-clpcfg.psf.bound = [0.01,0.03];
-clpcfg.psf.func  = @(v) normpdf(ticks,0,max(v,0.01)) /...
-                        norm(normpdf(ticks,0,max(v,0.01)),1);
+clpcfg.psf.value = [.6, .2, 5, 1.5, 1.5, 4]';
+clpcfg.psf.bound = @(v) v;
+
+t = ScanLines.get_psfticks(ticks);
+fL = @(aL,cL) (t< 0).*min((-cL*t+1).^(-aL),realmax);
+fR = @(aR,cR) (t>=0).*min(( cR*t+1).^(-aR),realmax);
+fg = @(s) 1/sqrt(2*pi*s^2)*exp(-t.^2/(2*s^2));
+
+clpcfg.psf.func = @(v) normalize(truncate(...
+               conv( (1-v(1))*fL(v(3),v(4)) + v(1)*fR(v(5),v(6)), fg(v(2)) )...
+               ,'mid') ,2);
+
+% ------------------- % 
+           
+
+ 
 
 

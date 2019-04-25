@@ -6,12 +6,12 @@ Y([M-6:M+6], [M-3:M+3]) = 1;
 
 % Generate lines R from image Y
 figure(); 
-subplot(231); imagesc(Y); title('0º');
-subplot(232); imagesc(fft_rotate(Y,20)); title('20º');
-subplot(233); imagesc(fft_rotate(Y,40)); title('40º');
-subplot(234); imagesc(fft_rotate(Y,60)); title('60º');
-subplot(235); imagesc(fft_rotate(Y,80)); title('80º');
-subplot(236); imagesc(fft_rotate(Y,100)); title('100º');
+subplot(231); imagesc(Y);  set(gca,'YDir','normal'); title('0º'); set(gca,'YDir','normal');
+subplot(232); imagesc(fft_rotate(Y,20));  set(gca,'YDir','normal'); title('20º');
+subplot(233); imagesc(fft_rotate(Y,40));  set(gca,'YDir','normal'); title('40º');
+subplot(234); imagesc(fft_rotate(Y,60));  set(gca,'YDir','normal'); title('60º');
+subplot(235); imagesc(fft_rotate(Y,80));  set(gca,'YDir','normal'); title('80º');
+subplot(236); imagesc(fft_rotate(Y,100));  set(gca,'YDir','normal'); title('100º');
 
 % Generate squared plot (even pixel length)
 N = 30;
@@ -21,12 +21,12 @@ Z([M-5:M+6], [M-2:M+3]) = 1;
 
 % Generate lines R from image Z
 figure(); 
-subplot(231); imagesc(Z); title('0º');
-subplot(232); imagesc(fft_rotate(Z,-30)); title('-30º');
-subplot(233); imagesc(fft_rotate(Z,-60)); title('-60º');
-subplot(234); imagesc(fft_rotate(Z,-90)); title('-90º');
-subplot(235); imagesc(fft_rotate(Z,-120)); title('-120º');
-subplot(236); imagesc(fft_rotate(Z,-150)); title('-150º');
+subplot(231); imagesc(Z);  set(gca,'YDir','normal'); title('0º');
+subplot(232); imagesc(fft_rotate(Z,-30)); set(gca,'YDir','normal'); title('-30º');
+subplot(233); imagesc(fft_rotate(Z,-60)); set(gca,'YDir','normal'); title('-60º');
+subplot(234); imagesc(fft_rotate(Z,-90)); set(gca,'YDir','normal'); title('-90º');
+subplot(235); imagesc(fft_rotate(Z,-120)); set(gca,'YDir','normal'); title('-120º');
+subplot(236); imagesc(fft_rotate(Z,-150)); set(gca,'YDir','normal'); title('-150º');
 
 % Test adjoints
 % <Rt{Y1},Y2> = <R-t{Y2},Y1>

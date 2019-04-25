@@ -5,38 +5,32 @@ initpkg
 
 %% ===== Read line data ===== $$
 % Assign dataset
-d = DataSpec('053018',0,4,1);    % (date, sample_number, nlines, version)
-d.set_scan_distance(1,7,0.01); % (start_location, length, resolution)(mm)
-
-d = DataSpec('071118',0,4,1);   % (date, sample_number, nlines, version)
-d.set_scan_distance(3,4,0.01) 
+d = DataSpec('100818',3,7,2);    
+d.set_scan_distance(2.4, 4.2, 0.01);
+angles = [0,45,70,90,115,135,180];
+% 
+% d = DataSpec('021319',32,9,1);  
+% d.set_scan_distance(2.4, 5.0, 0.01);
+% angles = [0,20,40,60,80,100,120,140,160];
 
 %% ===== Probe parameter object ====== %%
 % Set CLP parameters.
-params        = ProbeParams(NaN);          % Initialize inactive parameter 
-params.angles = ProbeParam([0,60,120,180]); % Set constant CLP angles.
-
-% Checkout all methods for class "ProbeParams"
-whos params;      pause();
-help ProbeParams; pause();
-
+params        = ProbeParams(NaN);       % Initialize inactive parameter 
+params.angles = ProbeParam(angles); % Set constant CLP angles.
 
 %% ===== Scan line object ====== %%
 % [Note] When input w/o parmas, read clpconfig for CLP parameter setting.
-lines = d.get_clpsecm_data(params); 
-
-% Checkout all methods for class "ScanLines"
-whos lines;     pause();
-help ScanLines; pause();
+lines = d.get_clpsecm_data(params);
+lines.downsample(4);
 
 
-%% =====  SECM image object ===== %%
+%% ===== SECM image object ===== %%
 % Back project image from lines
+lines.currents = lines.currents(:,[1,2]);
+lines.nlines = 2;
+lines.params.angles = ProbeParam(angles([1,2]));
+lines.params.psf = ProbeParam(NaN);
 bpimage = lines.back_project();
-
-% Checkout all methods for class "SecmImage"
-whos bpimage;   pause();
-help SecmImage; pause();
 
 
 %% ===== Plot data ===== %% 

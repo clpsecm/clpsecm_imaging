@@ -1,16 +1,14 @@
-classdef IPalmSecmSimul < IPalm
+classdef IPalmSecmRealdata < IPalm
     properties
         D  % true kernel
-        X0 % true map
-        Y  % true image
+        lines % observed lines
     end
     
     methods
-        function obj = IPalmSecmSimul(problem,true_map,disc)
+        function obj = IPalmSecmRealdata(problem,disc,lines)
             obj = obj@IPalm(problem);
-            obj.X0 = true_map;
             obj.D = disc;
-            obj.Y = (obj.X0)*(obj.D);
+            obj.lines = lines;
         end
 
         function display_result(obj)
@@ -23,9 +21,10 @@ classdef IPalmSecmSimul < IPalm
             Yhat.draw_image();
             title('Current image Y');
             
-            subplot(223); 
-            obj.Y.draw_image();
-            title('True image Y');
+            subplot(223);
+            obj.lines.plot_psf();
+            title('Point spread function');
+            legend off;
             
             subplot(224);
             obj.vars{1}.draw_image; 
