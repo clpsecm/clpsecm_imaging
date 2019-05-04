@@ -23,6 +23,7 @@ classdef ScanLines < SecmCoords
 %   MULT    -  Pointwise multiply currents w/ input multiplier(s).
 %   SHIFT   -  Shift currents data by input distance in (mm).
 %   ZEROING -  Adjust the base value of current to zero.
+%   EXTRACT -  Extract the lines of input angles.
 %   BACK_PROJECT - Backproject of currents to SECM image base on params
 %   DOWNSAMPLE   - Decrease resolution of current data by integer rate.
 %   PLOT_LINES   - Plot current data (with selected angles in deg).
@@ -144,6 +145,13 @@ methods
     % obj.ZEROING() Adding offset so the base value of each current is 0.
         mc = min(obj.currents);
         obj.currents = obj.currents - ones(size(obj.currents,1),1)*mc;
+    end
+    
+    function extract(obj,angles)
+    % obj.EXTRACT(angles) Extract lines of input angles
+        ind = find(ismember(obj.params.angles.value, angles)==1);
+        obj.currents = obj.currents(:,ind);
+        obj.params.angles = ProbeParam(obj.params.angles.value(ind));
     end
 
     function secmImage = back_project(obj)
