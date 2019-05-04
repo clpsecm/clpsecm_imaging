@@ -150,6 +150,7 @@ methods
     function extract(obj,angles)
     % obj.EXTRACT(angles) Extract lines of input angles
         ind = find(ismember(obj.params.angles.value, angles)==1);
+        obj.nlines = length(ind);
         obj.currents = obj.currents(:,ind);
         obj.params.angles = ProbeParam(obj.params.angles.value(ind));
     end
