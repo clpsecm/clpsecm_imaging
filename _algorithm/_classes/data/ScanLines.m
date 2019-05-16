@@ -17,8 +17,10 @@ classdef ScanLines < SecmCoords
 % SCANLINES methods:
 %   PLUS    -  Overload '+'. return new SCANLINES w/ summed currents.
 %   MINUS   -  Overload '-', return new SCANLINES w/ subtracted currents.
+%   
 %   NORM    -  Return Frobenius norm of currents.
 %   INPROD  -  Return inner product of currents.
+%   MAX     -  Return maximum value from currents
 %   CONV    -  Convolve currents w/ input kernel.
 %   MULT    -  Pointwise multiply currents w/ input multiplier(s).
 %   SHIFT   -  Shift currents data by input distance in (mm).
@@ -88,6 +90,10 @@ methods
         check_issame(obj1,obj2);
         n = sum(sum(obj1.currents.*obj2.currents)); 
     end
+    
+    function m = max(obj); m = max(max(obj.currents)); end
+    % obj.MAX() Return maximum value in currents.
+    
         
     function conv(obj,psf)
     % obj.CONV(psf) Convolute currents psf. 
@@ -124,7 +130,7 @@ methods
     % obj.MULT(multiplier) Point-product currents w/ multiplier. 
         obj.currents = obj.currents .* multiplier;
     end
-
+    
     function shift(obj,s)
     % obj.SHIFT(s) Shift i-th currents by s(i) for all currents.
         d = s/obj.resolution;
@@ -239,7 +245,7 @@ methods
         xlabel('Distance/mm'); xtickformat('%.1f');
         ylabel('Current/A');   ytickformat('%1.2f');
     end   
-end
+end 
 
 methods (Static)
     function psfticks = get_psfticks(ticks)
