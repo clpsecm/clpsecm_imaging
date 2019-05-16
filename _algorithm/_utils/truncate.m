@@ -8,7 +8,7 @@ if isnumeric(set)
     y = x(set);
 elseif strcmp(set,'mid')
     if mod(n+1,2)~=0; error('no centered middle segment'); end
-    y = x((n-1)/4+1:(3*(n-1))/4+1);
+    y = x(floor((n-1)/4)+1:floor(3*(n-1)/4)+1);
 end
 
 
