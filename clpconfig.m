@@ -25,9 +25,9 @@ function clpcfg = clpconfig(ticks)
 % * 4. If (param) is NOT A VARIABLE, set (param).bound =  @(v)v.
 %
 % See also PROBEPARAM, PROBEPARAMS
-disp(' ');
-disp('==== Load parameters from clpconfig =====')
-disp(' ');
+% disp(' ');
+% disp('==== Load parameters from clpconfig =====')
+% disp(' ');
 if isrow(ticks); ticks = ticks'; end
 nmeasures = numel(ticks);
 
@@ -49,7 +49,7 @@ clpcfg.intensity.bound = @(v) v;
 clpcfg.intensity.func  = @(v) ones(nmeasures,1)*v'; 
 
 % ------- Psf ------- %
-clpcfg.psf.value = [.6, .2, 5, 1.5, 1.5, 4]';
+clpcfg.psf.value = [.6, .2, 5, 2, 1.5, 8]';
 clpcfg.psf.bound = @(v) v;
 
 t = ScanLines.get_psfticks(ticks);
@@ -60,6 +60,9 @@ fg = @(s) 1/sqrt(2*pi*s^2)*exp(-t.^2/(2*s^2));
 clpcfg.psf.func = @(v) normalize(truncate(...
                conv( (1-v(1))*fL(v(3),v(4)) + v(1)*fR(v(5),v(6)), fg(v(2)) )...
                ,'mid') ,2);
+% clpcfg.psf.func = @(v) circshift(normalize(truncate(...
+%                conv( (1-v(1))*fL(v(3),v(4)) + v(1)*fR(v(5),v(6)), fg(v(2)) )...
+%                ,'mid') ,2), v(7));
 
 % ------------------- % 
            

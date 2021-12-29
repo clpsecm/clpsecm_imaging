@@ -69,7 +69,7 @@ methods
         obj.tinit  = 1*ones(obj.nvars,1);
         obj.tmult  = 2;
         obj.tdiv   = 0.5;
-        obj.niter_objval = 5;
+        obj.niter_objval = 1;
     end
 
     function set_niter_objval(obj,niter); obj.niter_objval = niter; end
@@ -132,16 +132,15 @@ methods (Access = protected)
 
     function stopping = stop_criterias(obj)
     % Stopping criteria of ipalm, return stopping as logical.
-        if mod(obj.iiter,10) == 0
+%         if mod(obj.iiter,10) == 0
             stopping = true;
             for I = 1:obj.nvars
                 stopping = stopping && ...
-                ( norm(obj.gradhv{I})/norm(obj.gradhv{I}) < 1e-3 ) && ...
-                ( true );
+                ( norm(obj.gradhv{I})/norm(obj.gradhv{I}) < 1e-3 );
             end
-        else
-            stopping = false; 
-        end
+%         else
+%             stopping = false; 
+%         end
     end
 end
 

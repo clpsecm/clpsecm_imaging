@@ -46,6 +46,7 @@ properties
     proxf % cell(2,1); proxf{I}: (vi,ti)|-> vi; prox of fi.
     gradh % cell(2,1); gradh{I}:    v   |-> (dh,t); gradient/stepsize of h.
     lda   % scalar; sparsity regularizer
+    rel_lda
 end
 
 methods 
@@ -61,10 +62,11 @@ methods
         
         % Calculate lda
         if nargin == 3
-            lda = 0.2*max(pos(D*Lt(R)));
+            obj.rel_lda = 0.2;
         else % naragin == 4
-            lda = varargin{1};
+            obj.rel_lda = varargin{1};
         end
+        lda = obj.rel_lda * max(pos(D*Lt(R)));
         obj.lda = lda;
         
         % Define variables (X,params)
@@ -85,7 +87,7 @@ methods
 end
 
 methods 
-    function set_lda(obj,lda);
+    function set_lda(obj,lda)
     % obj.SET_LDA(lda) Set lda.
         obj.lda = lda; 
         obj.funcf = @(v) sum(lda.*pos(v{1})); 

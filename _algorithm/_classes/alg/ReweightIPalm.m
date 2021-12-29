@@ -31,7 +31,7 @@ methods
         obj.plot_on = false; 
         obj.set_display(1);
         obj.set_maxiter(6);
-        obj.set_niter_ipalm(50);
+        obj.set_niter_ipalm(40);
     end
     
     function set_niter_ipalm(obj,niter_ipalm) 
@@ -45,7 +45,7 @@ methods (Access = protected)
     % obj.ITER() Run one instance of IPALM
         X = obj.f_X();
         if norm(X) ~= 0
-            obj.prb.set_lda(1e-3*obj.objval./(X+eps));
+            obj.prb.set_lda(1e-3*obj.objval./(X+eps) * obj.prb.rel_lda/0.05);
             obj.prb.set_init(obj.vars);
         end
         obj.ipalm = IPalm(obj.prb);

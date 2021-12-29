@@ -188,15 +188,79 @@ methods
     function draw_image(obj)
     % obj.DRAW_IMAGE(); Draws image with coordinate system.
         h = gca;
-        x = obj.ticks;
-        y = obj.ticks;
-        imagesc(x,y,obj.image);
+%         x = obj.ticks;
+%         y = obj.ticks;
+%         imagesc(x,y,obj.image);
+        imagesc(obj.image/max(max(obj.image)));
         set(h,'YDir','normal');
-        xlabel('Distance/mm'); xtickformat('%.1f');
-        ylabel('Distance/mm'); ytickformat('%.1f');
-        c = colorbar(); c.Label.String = 'Currents/A';
+%         xlabel('Distance/mm'); xtickformat('%.1f');
+%         ylabel('Distance/mm'); ytickformat('%.1f');
+        c = colorbar(); c.Label.String = 'Relative Intensity';
                         c.FontSize = h.FontSize - 4;
                         c.Label.FontSize = h.FontSize;
+    end
+    
+    function img = translate(obj, xdis, ydis)
+    % obj.TRANSLATE(xdis,ydis)
+    % xdis and ydis are the number of PIXELS to translate
+    % xdis > 0 denotes translating to right-ward;
+    % ydis > 0 denotes translating to up-ward.
+        img = obj;
+        n = size(img.image, 1);
+        if xdis > 0
+            img.image = [zeros(n,xdis), img.image(:,1:end-xdis)];
+        elseif xdis < 0
+            img.image = [img.image(:,-xdis+1:end), zeros(n,-xdis)];
+        end
+        if ydis > 0
+            img.image = [img.image(ydis+1:end,:); zeros(ydis,n)];
+        elseif ydis < 0
+            img.image = [zeros(-ydis,n); img.image(1:end+ydis,:)];
+        end
+    end
+    
+    
+    function loss = dist_loss(obj, x_truth)
+    % obj.DIST_LOSS(x_truth);
+    % Object should be a sparse map SecmImage.
+        [ix,iy] = find(obj.image > 0);
+        n = length(ix);
+        x = [];
+
+		neighbor_table = (abs(ix-ix') + abs(iy-iy')) <= 2;
+        neighbor_table = neighbor_table - diag(ones(n,1));
+		labels = 1:n;
+
+		for k = 1:n
+			labels(neighbor_table(k,:) > 0) = labels(k);
+		end
+		
+		for k = 1:n
+			idx = find(labels==k);
+			if ~isempty(idx)
+				x_centroid = mean([ix(idx), iy(idx)], 1);
+                
+                if isempty(x)
+                    x = x_centroid;
+                else
+                    x = [x; x_centroid];
+                end
+			end
+		end
+
+
+
+        x = x * obj.resolution + obj.ticks(1);
+        x = x - mean(x) + mean(x_truth);
+        
+        dist_table = sqrt((x(:,1)-x_truth(:,1)').^2 + (x(:,2)-x_truth(:,2)').^2);
+        loss = sum(min(dist_table));
+        loss = loss + abs(size(x,1) - size(x_truth,1)) * obj.resolution*obj.nmeasures/2;
+    end
+    
+    function normalize(obj)
+    % obj.NORMALIZE(); Normalizes the image to have max value 1.
+        obj.image = obj.image / max(max(obj.image));
     end
 end
 
